@@ -1,31 +1,57 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 
-const data = [
-    { name: "Anom", age: 19, gender: "Male" },
-    { name: "Megha", age: 19, gender: "Female" },
-    { name: "Subham", age: 25, gender: "Male"},
-  ]
 
-export default function AllShifts() {
+const TIME_OBJ_NAME = "TIME_OBJ_NAME"
+
+
+export default function AllShifts({ timer }) {
+
+  const [shifts, setShifts] = useState(null)
+
+  useEffect(() => {
+    let shiftsStr = localStorage.getItem(TIME_OBJ_NAME)
+    console.log(JSON.parse(shiftsStr))
+    setShifts(JSON.parse(shiftsStr))
+  }, [timer])
+
   return (
     <div>
-    <h1>AllShifts</h1>
-   <table>
-        <tr>
-          <th>Name</th>
-          <th>Age</th>
-          <th>Gender</th>
-        </tr>
-        {data.map((val, key) => {
-          return (
-            <tr key={key}>
-              <td>{val.name}</td>
-              <td>{val.age}</td>
-              <td>{val.gender}</td>
-            </tr>
-          )
-        })}
+      <h1>AllShifts</h1>
+      <table>
+        <thead>
+
+          <tr>
+            <th>Date</th>
+            <th>Start</th>
+            <th>End</th>
+          </tr>
+        </thead>
+        <tbody>
+
+
+
+          {shifts && Object.keys(shifts).map(key => {
+            return (
+              <tr key={key}>
+                <td>{key}</td>
+                <td>{shifts[key].start}</td>
+                <td>{shifts[key].end}</td>
+              </tr>
+            )
+          })
+          }
+          {/* {shifts && shifts.map(function(object, key){
+        return (
+          <tr key={key}>
+            <td>{key}</td>
+            <td>{object[key].start}</td>
+            <td>{object[key].end}</td>
+          </tr>
+        )
+    })} */}
+
+        </tbody>
       </table>
     </div>
   )

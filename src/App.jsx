@@ -92,11 +92,11 @@ function App() {
       timeObject[todayKey] = {}
     }
     if(inShift){
-      timeObject[todayKey]["end"] = new Date()
+      timeObject[todayKey]["end"] = moment(new Date()).format('LTS')
       stopTimer()
     }else{
-      let startTime = new Date()
-      timeObject[todayKey]["start"] = startTime
+      let startTime =new Date()
+      timeObject[todayKey]["start"] = moment(startTime).format('LTS')
       startTimer(startTime)
 
     }
@@ -130,7 +130,7 @@ function App() {
       <div>
         <span>{timer!==0 && `time in shift : ${ getTimeStr() }`}</span>
       </div>
-      <AllShifts />
+      <AllShifts timer={timer}/>
 
     </div>
   );
