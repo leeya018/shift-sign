@@ -3,7 +3,6 @@ import './App.css';
 import moment from 'moment'
 
 import AllShifts from './AllShifts'
-import { clear } from '@testing-library/user-event/dist/clear';
 
 let timeInterval = null
 
@@ -15,8 +14,11 @@ function App() {
   const [start, setStart] = useState('')
   const [end, setEnd] = useState('')
   const [timer, setTimer] = useState(0)
+  const [stop, setStop] = useState(false)
+  const [timerStr, setTimerStr] = useState("00:00:00")
 
-  
+
+
   // useEffect(() => {  
   //   let inShiftL = localStorage.getItem('inShift')
   //   if( localStorage.getItem(TIME_OBJ_NAME) == null){
@@ -42,14 +44,30 @@ function App() {
 
   //  }, [inShift])
 
-  useEffect(() => {  
-    if(localStorage.getItem(TIME_OBJ_NAME) == undefined){
-      localStorage.setItem(TIME_OBJ_NAME,"{}")
+  useEffect(() => {
+    if (localStorage.getItem(TIME_OBJ_NAME) == undefined) {
+      localStorage.setItem(TIME_OBJ_NAME, "{}")
     }
   }, [])
 
+  useEffect(() => {
+    if(stop){
+      setTimer(0)
+      setTimeout(() => {
+        setStop(false)
+      }, 1000);
+    }
+    if (timer && !stop) {
+      setTimeout(() => {
+        setTimer(timer + 1)
+      }, 1000);
+      updateTimerStr(timer)
+    }
+  }, [timer])
 
-  function fetchData(){
+
+
+  function fetchData() {
     let today = new Date()
     let timestr = localStorage.getItem(TIME_OBJ_NAME)
     let timeObject = JSON.parse(timestr)
@@ -57,70 +75,54 @@ function App() {
     setEnd(timeObject[moment(today).format('l')]["end"])
 
   }
-  function clearData(){
-    localStorage.setItem(TIME_OBJ_NAME,'')
-    localStorage.setItem('inShift',false)
+  function clearData() {
+    localStorage.setItem(TIME_OBJ_NAME, '')
+    localStorage.setItem('inShift', false)
   }
-  function clearAll(){
+  function clearAll() {
     localStorage.clear()
   }
 
-  // function startTimer(time){
-  //   setTimer(moment(new Date()).format('LTS'))
-  //   timeInterval = setInterval(() => {
-  //     var timer = duration, minutes, seconds;
-  //     let currTime = moment(new Date()).format('LTS') // change by moment 
-  //     setTimer(currTime)
-  //   }, 1000);
 
-    function startTimer() {
-      timeInterval = setInterval(function () {
-      setTimer(timer + 1)
-      }, 1000);
-  
-  }
-
-  function stopTimer(){
-    clearInterval(timeInterval)
-    setTimer(0)
-  }
-  function updateTime(){
+  function updateTime() {
     let timestr = localStorage.getItem(TIME_OBJ_NAME)
     let timeObject = JSON.parse(timestr)
     let todayKey = moment(new Date()).format('l')
-    if(timeObject[todayKey] == undefined){
+    if (timeObject[todayKey] == undefined) {
       timeObject[todayKey] = {}
     }
-    if(inShift){
+    if (inShift) {
       timeObject[todayKey]["end"] = moment(new Date()).format('LTS')
-      stopTimer()
-    }else{
-      let startTime =new Date()
+      setStop(true)
+    } else {
+      let startTime = new Date()
       timeObject[todayKey]["start"] = moment(startTime).format('LTS')
-      startTimer(startTime)
+      setTimer(1)
 
     }
-    localStorage.setItem(TIME_OBJ_NAME,JSON.stringify(timeObject))
+    localStorage.setItem(TIME_OBJ_NAME, JSON.stringify(timeObject))
 
     setInShift(!inShift)
   }
 
-  function getTimeStr(){
-    let minutes, seconds
-      minutes = parseInt(timer / 60, 10)
-      seconds = parseInt(timer % 60, 10);
-    
-      minutes = minutes < 10 ? "0" + minutes : minutes;
-      seconds = seconds < 10 ? "0" + seconds : seconds;
+  function updateTimerStr(time) {
+    let minutes, seconds, hours
+    minutes = parseInt(time / 60, 10)
+    seconds = parseInt(time % 60, 10);
+    hours = parseInt(time / 3600, 10);
 
-    return minutes + ":" + seconds
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+    hours = hours < 10 ? "0" + hours : hours;
+
+    setTimerStr(`${hours}:${minutes}:${seconds}`)
   }
 
   return (
     <div className="App">
       <h1>tarnitariontsiare</h1>
 
-      <button onClick={updateTime}>{inShift? 'stop time ' : 'start time'}</button>
+      <button onClick={updateTime}>{inShift ? 'stop time ' : 'start time'}</button>
       <button onClick={fetchData}>show data</button>
       <div>
         {`shift data : ${moment(start).format('LLL')} - ${moment(end).format('LLL')}`}
@@ -128,9 +130,10 @@ function App() {
       <button onClick={clearData}>clear data </button>
       <button onClick={clearAll}>clear all </button>
       <div>
-        <span>{timer!==0 && `time in shift : ${ getTimeStr() }`}</span>
+        <span>{timerStr}</span>
       </div>
-      <AllShifts timer={timer}/>
+      <AllShifts timer={timer} />
+      {/* <span>{counter}</span> */}
 
     </div>
   );
