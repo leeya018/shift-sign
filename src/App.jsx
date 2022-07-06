@@ -3,6 +3,8 @@ import './App.css';
 import moment from 'moment' 
 
 import AllShifts from './AllShifts'
+import Xlsx from './ExportCSV';
+import ExportCSV from './ExportCSV';
 
 let timeInterval = null
 
@@ -80,6 +82,7 @@ function App() {
     localStorage.setItem('inShift', false)
   }
   function clearAll() {
+
     localStorage.clear()
   }
 
@@ -92,10 +95,17 @@ function App() {
       timeObject[todayKey] = {}
     }
     if (inShift) {
+      if(timeObject[todayKey]["end"]){
+        alert("you allready sign end for today")
+        return
+      }
       timeObject[todayKey]["end"] = new Date()
-
       setStop(true)
     } else {
+      if(timeObject[todayKey]["end"]){
+        alert("you allready sign start for today")
+        return
+      }
       let startTime = new Date()
       timeObject[todayKey]["start"] = startTime
 
@@ -120,6 +130,10 @@ function App() {
     setTimerStr(`${hours}:${minutes}:${seconds}`)
   }
 
+  function updateXlsx(){
+        
+  }
+
   return (
     <div className="app">
       <h1>Sign time</h1>
@@ -134,6 +148,7 @@ function App() {
       <div>
         <span>{timerStr}</span>
       </div>
+      
       <AllShifts timer={timer} />
       {/* <span>{counter}</span> */}
 

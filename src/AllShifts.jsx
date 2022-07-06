@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import "./AllShifts.css"
 
 import moment from 'moment'
+import ExportCSV from './ExportCSV'
 
 const AMOUNT_OF_HOURS_NEED = 60
 const TIME_OBJ_NAME = "TIME_OBJ_NAME"
@@ -60,6 +61,7 @@ export default function AllShifts({ timer }) {
   return (
     <div>
       <div className="total-container">
+      <ExportCSV ObjData={shifts} fileName={"my-times"} />
           <button className='show-total-button' onClick={getTotalTime}>show total</button>
           {totalSeconds!==0 && <span>{showClock(totalSeconds)}</span>} 
           <p>amount you need to give: {AMOUNT_OF_HOURS_NEED - getHours()}</p>
