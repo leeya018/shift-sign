@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
+import "./AllShifts.css"
 
 import moment from 'moment'
 
-
+const AMOUNT_OF_HOURS_NEED = 60
 const TIME_OBJ_NAME = "TIME_OBJ_NAME"
 
 
@@ -52,11 +53,20 @@ export default function AllShifts({ timer }) {
     return `${hours}:${minutes}:${seconds}`
   }
 
+  function getHours(){
+    return (totalSeconds / 3600).toFixed(1)
+  }
+
   return (
     <div>
-      <button onClick={getTotalTime}>show total</button>
-      <span>{showClock(totalSeconds)}</span>
+      <div className="total-container">
+          <button className='show-total-button' onClick={getTotalTime}>show total</button>
+          {totalSeconds!==0 && <span>{showClock(totalSeconds)}</span>} 
+          <p>amount you need to give: {AMOUNT_OF_HOURS_NEED - getHours()}</p>
+      </div>
       <h1>AllShifts</h1>
+    <div className="table-container">
+
       <table>
         <thead>
 
@@ -72,7 +82,7 @@ export default function AllShifts({ timer }) {
 
           {shifts && Object.keys(shifts).map(key => {
             return (
-              <tr key={key}>
+              <tr className='t-row' key={key}>
                 <td>{key}</td>
                 <td>{showTime(shifts[key].start)}</td>
                 <td>{showTime(shifts[key].end)}</td>
@@ -82,6 +92,7 @@ export default function AllShifts({ timer }) {
           }
         </tbody>
       </table>
+    </div>
     </div>
   )
 }

@@ -121,15 +121,15 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <h1>tarnitariontsiare</h1>
+    <div className="app">
+      <h1>Sign time</h1>
 
       <button onClick={updateTime}>{inShift ? 'stop time ' : 'start time'}</button>
-      <button onClick={fetchData}>show data</button>
+      {/* <button onClick={fetchData}>show data</button>
       <div>
         {`shift data : ${moment(start).format('LLL')} - ${moment(end).format('LLL')}`}
-      </div>
-      <button onClick={clearData}>clear data </button>
+      </div> */}
+      {/* <button onClick={clearData}>clear data </button> */}
       <button onClick={clearAll}>clear all </button>
       <div>
         <span>{timerStr}</span>
