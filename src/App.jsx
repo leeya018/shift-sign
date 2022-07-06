@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import moment from 'moment'
+import moment from 'moment' 
 
 import AllShifts from './AllShifts'
 
@@ -92,11 +92,13 @@ function App() {
       timeObject[todayKey] = {}
     }
     if (inShift) {
-      timeObject[todayKey]["end"] = moment(new Date()).format('LTS')
+      timeObject[todayKey]["end"] = new Date()
+
       setStop(true)
     } else {
       let startTime = new Date()
-      timeObject[todayKey]["start"] = moment(startTime).format('LTS')
+      timeObject[todayKey]["start"] = startTime
+
       setTimer(1)
 
     }
@@ -107,14 +109,14 @@ function App() {
 
   function updateTimerStr(time) {
     let minutes, seconds, hours
-    minutes = parseInt(time / 60, 10)
     seconds = parseInt(time % 60, 10);
+    minutes = parseInt(time / 60 % 60 , 10)
     hours = parseInt(time / 3600, 10);
 
-    minutes = minutes < 10 ? "0" + minutes : minutes;
     seconds = seconds < 10 ? "0" + seconds : seconds;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
     hours = hours < 10 ? "0" + hours : hours;
-
+    
     setTimerStr(`${hours}:${minutes}:${seconds}`)
   }
 
